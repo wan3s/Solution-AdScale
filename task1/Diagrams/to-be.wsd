@@ -17,27 +17,20 @@ Container_Ext(apiGateway, "API Gateway", "Kong / Nginx", "Routing, rate limiting
 
 ' ====================== Микросервисы ======================
 
-System_Boundary(adEngine, "Ad Engine") {
-    Container(adServer, "Ad Server", "Go", "Принимает HTTP-запросы, определяет пользователя, подбирает кандидатов в рекламу") 
+Container(adServer, "Ad Server", "Go", "Принимает HTTP-запросы, определяет пользователя, подбирает кандидатов в рекламу") 
 
-    Container(auctionEngine, "Auction Engine", "Go", "Взвешивание ставок, бизнес-правила, расчёт победителя аукциона") 
+Container(auctionEngine, "Auction Engine", "Go", "Взвешивание ставок, бизнес-правила, расчёт победителя аукциона") 
 
-    Container(adEngineOrchestator, "Orchestator", "Go", "Оркестирует походы внутри рекламного движка")
+Container(deliveryService, "Delivery Service", "Node.js", "Формирует HTML/JS-разметку баннера и HTTP response")
 
-    Container(deliveryService, "Delivery Service", "Node.js", "Формирует HTML/JS-разметку баннера и HTTP response")
+Container(bidsCache, "Redis Cache", "Redis 7", "Кэш ставок и кампаний)")
 
-    Container(bidsCache, "Redis Cache", "Redis 7", "Кэш ставок и кампаний)")
 
-}
+Container(financialService, "Financial Service", "Go", "Списание средств, выставление счетов, управление балансами")
 
-System_Boundary(adLk, "Личный кабинет рекламодателя") {
+Container(analyticsService, "Analytics Service", "Python", "Аналитические SQL-запросы по production-БД") 
 
-    Container(financialService, "Financial Service", "Go", "Списание средств, выставление счетов, управление балансами")
-
-    Container(analyticsService, "Analytics Service", "Python", "Аналитические SQL-запросы по production-БД") 
-
-    Container(adCabinet, "Advertiser Dashboard", "Node.js + JavaScript", "Web UI: управление кампаниями, отчётность")
-}
+Container(adCabinet, "Advertiser Dashboard", "Node.js + JavaScript", "Web UI: управление кампаниями, отчётность")
 
 Container(statsService, "Statistics Service", "Python", "Запись кликов и показов") 
 
@@ -51,9 +44,8 @@ ContainerDb(clickHouse, "ClickHouse", "События, аналитика")
 Rel_U(dspPartner, apiGateway, "HTTPS / OpenRTB", "Bid requests / responses")
 Rel_U(endUser, apiGateway, "HTTPS", "Просмотр рекламы и клики")
 Rel_U(advertiser, apiGateway, "HTTPS", "Управляет кампаниями и бюджетами")
-Rel(apiGateway, adEngineOrchestator, "Bid requests / responses", "grpc")
-Rel(adEngineOrchestator, adServer, "Bid requests / responses", "Internal Call")
-Rel(adEngineOrchestator, auctionEngine, "Передаёт кандидатов", "Internal Call")
+Rel(apiGateway, adServer, "Bid requests / responses", "Internal Call")
+Rel(adServer, auctionEngine, "Передаёт кандидатов", "Internal Call")
 Rel(adEngineOrchestator, deliveryService, "Передаёт победителя аукциона", "Internal Call")
 Rel(apiGateway, adCabinet, "Управляет кампаниями и бюджетами", "HTTPS")
 Rel(adCabinet, paymentGateway, "Пополнение бюджета", "HTTPS / REST")
