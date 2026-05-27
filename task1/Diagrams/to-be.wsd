@@ -40,15 +40,13 @@ ContainerDb(statsClickHouse, "ClickHouse", "События, аналитика")
 
 Rel_U(endUser, apiGateway, "HTTPS", "Просмотр рекламы и клики")
 Rel_U(advertiser, apiGateway, "HTTPS", "Управляет кампаниями и бюджетами")
-
-
+Rel_U(dspPartner, apiGateway, "Bid requests / responses", "OpenRTB")
 
 
 Rel(apiGateway, adServer, "Запрос на показ рекламы", "Internal Call")
 Rel(apiGateway, adCabinet, "Управляет кампаниями и бюджетами", "Internal Call")
 Rel(apiGateway, statsService, "Регистрирует показы и клики", "Internal Call")
 
-Rel(adServer, dspPartner, "Bid requests / responses", "OpenRTB")
 Rel(adServer, auctionEngine, "Передаёт кандидатов", "Internal Call")
 Rel(adServer, deliveryService, "Запрашивает генерацию баннера для победителя", "Internal Call")
 
