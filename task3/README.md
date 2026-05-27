@@ -7,4 +7,5 @@
 *   [scaling.md](scaling.md) — стратегии репликации и шардирования;
 *   [caching.md](caching.md) — дизайн кэширования;
 *   [event-streaming.md](event-streaming.md) — архитектура Kafka;
+    [failover.md](failover.md) - отказоустойчивость данных;
 *   [diagrams/](diagrams/) — диаграммы данных.
