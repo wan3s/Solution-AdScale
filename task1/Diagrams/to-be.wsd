@@ -14,6 +14,7 @@ System_Ext(dspPartner, "DSP-партнёр", "Отправляет bid requests,
 System_Ext(paymentGateway, "Платёжный шлюз", "Обработка пополнения рекламных бюджетов")
 Container_Ext(apiGateway, "API Gateway", "Kong / Nginx", "Routing, rate limiting, circuit breaker")
 Container_Ext(campaignsKafka, "Apache Kafk", "Kafka 3.x", "Отправка новых и изменённых рекламных кампаний")
+Container_Ext(statsKafka, "Apache Kafk", "Kafka 3.x", "Отправка статистики кликов")
 
 ' ====================== Микросервисы ======================
 
@@ -45,7 +46,8 @@ Rel_U(dspPartner, apiGateway, "Bid requests / responses", "OpenRTB")
 
 Rel(apiGateway, adServer, "Запрос на показ рекламы", "Internal Call")
 Rel(apiGateway, adCabinet, "Управляет кампаниями и бюджетами", "Internal Call")
-Rel(apiGateway, statsService, "Регистрирует показы и клики", "Internal Call")
+Rel(apiGateway, statsKafka, "Регистрирует показы и клики", "Async")
+Rel(statsKafka, statsService, "Считывает показы и клики", "Internal Call")
 
 Rel(adServer, auctionEngine, "Передаёт кандидатов", "Internal Call")
 Rel(adServer, deliveryService, "Запрашивает генерацию баннера для победителя", "Internal Call")
