@@ -1,0 +1,53 @@
+' @startuml
+' participant Participant as Foo
+' actor       Actor       as Foo1
+' boundary    Boundary    as Foo2
+' control     Control     as Foo3
+' entity      Entity      as Foo4
+' database    Database    as Foo5
+' collections Collections as Foo6
+' queue       Queue       as Foo7
+' Foo -> Foo1 : To actor 
+' Foo -> Foo2 : To boundary
+' Foo -> Foo3 : To control
+' Foo -> Foo4 : To entity
+' Foo -> Foo5 : To database
+' Foo -> Foo6 : To collections
+' Foo -> Foo7 : To queue
+' @enduml
+
+@startuml
+actor           Пользователь                as user
+entity          DSPпартнер                  as dspPartner
+
+participant     APIGateway                  as apiGateway
+participant     ADServer                    as adServer
+participant     AuctionEngine               as auctionEngine
+participant     DeliveryService             as deliveryService
+
+database        Redis_рекламные_кампании    as campaignsCache
+database        Postgres_ставки             as bidsPG
+database        Redis_ставки                as bidsRedis
+
+user -> apiGateway : Просмотр рекламы и клики
+apiGateway -> adServer : Запрос на показ рекламы
+adServer -> campaignsCache : рекламные кампании
+adServer -> apiGateway : Bid request
+apiGateway -> dspPartner : Bid request
+dspPartner -> apiGateway : Bid response
+apiGateway -> adServer : Bid response
+adServer -> auctionEngine : Проведи аукцион
+
+alt есть в кэше
+    auctionEngine -> bidsRedis : запрос ставок
+else нет в кэше
+    auctionEngine -> bidsPG : запрос ставок
+end
+
+auctionEngine -> adServer : Результат аукциона
+
+adServer -> deliveryService : Сформируй баннер
+adServer -> apiGateway : Покажи баннер пользователю
+apiGateway -> user : Покажи баннер пользователю
+
+@enduml

@@ -4,7 +4,7 @@
 
 По структуре:
 *   [AS-IS.md](AS-IS.md) - анализ текущей архитектуры;
-*   [Drivers.md](Drivers.md) — архитектурные драйверы;
+*   [drivers.md](drivers.md) — архитектурные драйверы;
 *   [TO-BE.md](TO-BE.md) - описание целевой архитектуры;
-*   [Diagrams](Diagrams/) — диаграммы C4 (TO-BE) в формате PlantUML;
+*   [diagrams](diagrams/) — диаграммы C4 (TO-BE) в формате PlantUML;
 *   [adr/](adr) — документы ADR.
